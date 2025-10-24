@@ -20,20 +20,21 @@ jobs:
                   sudo ln -sf python2 /usr/bin/python
                   sudo wget https://raw.githubusercontent.com/LineageOS/android_system_core/lineage-17.1/mkbootimg/mkbootimg.py -O /usr/bin/mkbootimg
 
-            - name: Patch Kernel Configuration to Fix Memory Conflict
+            - name: Build device tarball (and Patch Kernel)
               run: |
-                  # The configuration file path is arch/arm64/configs/defconfig
+                  # 1. Clone Halium build tools
+                  git clone https://gitlab.com/ubports/community-ports/halium-generic-adaptation-build-tools -b $ADAPTATION_TOOLS_BRANCH build
+                  
+                  # 2. Patch the kernel configuration in the current directory *before* compilation
                   DEFCONFIG_PATH="arch/arm64/configs/defconfig" 
                   
                   # Inject CONFIG_PHYS_OFFSET=0x80000000 to move the kernel load address.
-                  # This high address should bypass the hardware's reserved memory range (0x2700000 - 0x3588fff).
+                  # This fixes the 'Invalid memory segment' error encountered during kexec.
                   echo "CONFIG_PHYS_OFFSET=0x0000000080000000" >> $DEFCONFIG_PATH
                   
                   echo "Successfully patched $DEFCONFIG_PATH with CONFIG_PHYS_OFFSET."
                   
-            - name: Build device tarball
-              run: |
-                  git clone https://gitlab.com/ubports/community-ports/halium-generic-adaptation-build-tools -b $ADAPTATION_TOOLS_BRANCH build
+                  # 3. Run the main build script
                   ./build.sh
 
             - name: Build devel-flashable
