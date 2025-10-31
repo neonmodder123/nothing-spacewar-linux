@@ -1,70 +1,79 @@
-name: Build devel-flashable
+name: Build SailfishOS TEST
 
 on:
   workflow_dispatch:
+    inputs:
+      SFOS_VERSION:
+        description: 'Target Sailfish OS Release'
+        required: true
+        default: '4.5.0.24'
 
 permissions:
-  contents: write  # required for creating releases
+  contents: write
 
 jobs:
-  devel-flashable:
+  sailfishos_flashable:
     runs-on: ubuntu-22.04
     env:
-      ADAPTATION_TOOLS_BRANCH: main
-
+      SFOS_RELEASE: ${{ github.event.inputs.SFOS_VERSION }}
+      DEVICE: 'Spacewar'
+      VENDOR: 'nothing'
+      SFOS_ARCH: 'aarch64'
+      
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup build environment
+      - name: Install Build Dependencies and Mer Tools
         run: |
+          # Install general build tools
           sudo apt update
-          sudo apt install bc bison build-essential ca-certificates cpio curl fakeroot flex git img2simg jq kmod libssl-dev libtinfo5 lz4 python2 python3 sudo unzip wget xz-utils tar -y --no-install-recommends
-          sudo ln -sf python2 /usr/bin/python
-          sudo wget https://raw.githubusercontent.com/LineageOS/android_system_core/lineage-17.1/mkbootimg/mkbootimg.py -O /usr/bin/mkbootimg
+          sudo apt install -y build-essential ca-certificates cpio curl git libssl-dev lz4 python3-setuptools sudo unzip wget xz-utils tar bc bison flex jq kmod libtinfo5
 
-      - name: Build device tarball
-        run: |
-          git clone https://gitlab.com/ubports/community-ports/halium-generic-adaptation-build-tools -b $ADAPTATION_TOOLS_BRANCH build
-          ./build.sh
+          git clone https://github.com/mer-tools/mer-sdk-tools
+          sudo cp mer-sdk-tools/mb2 /usr/local/bin/
 
-      - name: Clean up to get more space
+      - name: Clone Mer-Hybris Repositories
         run: |
-          rm -rf workdir/downloads/KERNEL_OBJ
-          rm -rf workdir/downloads/android_kernel_msm-5.4_nothing_sm7325
-          
-      - name: Build devel-flashable
+          git clone --depth 1 https://github.com/mer-hybris/mer-hybris.git mer-hybris
+          git clone --depth 1 https://github.com/mer-hybris/android.git mer-hybris/android
+
+          mb2 -s $SFOS_RELEASE -t nothing-Spacewar-$SFOS_ARCH --debug -D mb2.target.extra_args="--without-api-check" init
+
+      - name: Configure and Build Sailfish OS Image
         run: |
-          DEVICE="$(source deviceinfo && echo $deviceinfo_codename)"
-          ./build/prepare-fake-ota.sh out/device_${DEVICE}.tar.xz ota
+          tar -czf $DEVICE-source.tar.gz .
+
+          # The main HADK script that patches the kernel, builds device packages, and creates the flashable image.
+          # IMPORTANT: Ensure your kernel RPM spec file (e.g., rpm/dhd/kernel-nothing-spacewar.spec) is updated
+          # to pull from the correct kernel source: https://github.com/Nonta72/android_kernel_nothing_sm7325.git
+          ./rpm/dhd/helpers/build_packages.sh --build-source-image $DEVICE-source.tar.gz
+
+      - name: Prepare the image
+        run: |
           mkdir -p out
-          ./build/system-image-from-ota.sh ota/ubuntu_command out
-          mv out/rootfs.img out/ubuntu.img
+          
+          # Find the generated flashable ZIP file and move it to the 'out' directory
+          SFOS_ARCHIVE=$(find rpm/ -name "*$DEVICE*.zip" -type f -exec basename {} \;)
+          echo "SFOS_ARCHIVE_NAME=$SFOS_ARCHIVE" >> $GITHUB_ENV
+          mv rpm/$SFOS_ARCHIVE out/
 
-      # --- Pack all images into one tar.xz ---
-      - name: Create archive for release
-        run: |
-          cd out
-          tar -cJf UT-24.02_v3.tar.xz boot.img vendor_boot.img ubuntu.img
-          cd ..
-
-      # --- Upload the archive as build artifact (for CI logs) ---
       - name: Upload the archive to artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: UT-24.02_v3
-          path: out/UT-24.02_v3.tar.xz
+          name: SailfishOS-${{ env.SFOS_RELEASE }}-${{ env.DEVICE }}
+          path: out/${{ env.SFOS_ARCHIVE_NAME }}
           if-no-files-found: error
 
-      # --- Publish to GitHub Releases ---
       - name: Publish GitHub release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: "UT-24.02_v${{ github.run_number }}"
-          name: "Ubuntu Touch 24.02 Build #${{ github.run_number }}"
-          files: out/UT-24.02_v3.tar.xz
+          tag_name: "SFOS-${{ env.SFOS_RELEASE }}_${{ github.run_number }}"
+          name: "Sailfish OS ${{ env.SFOS_RELEASE }} Build #${{ github.run_number }}"
+          files: out/${{ env.SFOS_ARCHIVE_NAME }}
           body: |
-            Automated build for ${{ github.repository }}
+            Automated Sailfish OS build for ${{ env.DEVICE }}
+            Base Release: ${{ env.SFOS_RELEASE }}
             Commit: ${{ github.sha }}
             Triggered by: ${{ github.actor }}
         env:
