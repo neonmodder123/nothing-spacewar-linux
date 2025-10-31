@@ -26,12 +26,13 @@ jobs:
 
       - name: Install Build Dependencies and Mer Tools
         run: |
-          # Install general build tools
+          set -e
           sudo apt update
           sudo apt install -y build-essential ca-certificates cpio curl git libssl-dev lz4 python3-setuptools sudo unzip wget xz-utils tar bc bison flex jq kmod libtinfo5
 
-          git clone https://github.com/mer-tools/mer-sdk-tools
-          sudo cp mer-sdk-tools/mb2 /usr/local/bin/
+          wget https://raw.githubusercontent.com/mer-tools/mer-sdk-tools/master/mb2 -O mb2
+          chmod +x mb2
+          sudo mv mb2 /usr/local/bin/
 
       - name: Clone Mer-Hybris Repositories
         run: |
