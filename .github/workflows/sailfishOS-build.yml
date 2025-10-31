@@ -1,0 +1,4 @@
+# This workflow is just a placeholder for the actual workflow in the SailfishOS branch
+name: Build SailfishOS TEST
+on:
+  workflow_dispatch:
