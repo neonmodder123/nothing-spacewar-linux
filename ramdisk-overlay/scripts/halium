@@ -449,7 +449,7 @@ load_kernel_modules() {
 
 mountroot() {
 	# Custom Partition
-	partlist="sda11"
+	partlist="sda11 userdata"
 
 	pre_mountroot
 
