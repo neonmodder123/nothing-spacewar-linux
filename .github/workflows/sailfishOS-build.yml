@@ -2,3 +2,12 @@
 name: Build SailfishOS TEST
 on:
   workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    
+    steps:
+      - name: echo
+        run: |
+          echo "This workflow is just a placeholder for the actual workflow in the SailfishOS branch"
