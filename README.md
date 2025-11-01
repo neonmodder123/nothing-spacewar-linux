@@ -44,7 +44,7 @@ mkpart ubtouch_data
 print
 quit
 ```
-It should show you a new partition with the number 11 called ubtouch_data.
+  It should show you a new partition with the number 11 called ubtouch_data.
 
 10. In the UBPorts recovery, click **Advanced** , then click **Reboot to recovery**.
 
@@ -63,14 +63,14 @@ adb push <drag ubuntu.img> /data/
 ```
 14. Reboot!
 
-You have now successfully dualbooted Android and Ubuntu Touch! Wait 2-4 minutes for the first boot. You should see the Ubuntu Touch bootanimationand see the setup. Proceed to the next step.
+  You have now successfully dualbooted Android and Ubuntu Touch! Wait 2-4 minutes for the first boot. You should see the Ubuntu Touch bootanimationand see    the setup. Proceed to the next step.
 
 15. Finish the Ubuntu Touch setup and connect to the internet if you did not already.
 16. Open the Open Store and search for an app called "Switch my Slot" and install it.
 17. Now if you want to switch back to android, open the newly installed app and click Switch Slot, and reboot!
 You can also switch slots in android using the app [Boot Control](https://github.com/capntrips/BootControl/releases/tag/v1.0.0-alpha03), but you need to have root installed. If you do not want to root your device, you will manually have to reboot to fastboot mode/bootloader and use fastboot on your PC to switch to Ubuntu Touch.
 
-_**IMPORTANT NOTE**_: You can NEVER, lock the bootloader in this state. EVER! If you attempt to, you will risk hard-bricking your phone! (Black screen, not turning on at all.) Although this is recoverable with EDL Mode, it is not recommended to lock the bootloader.
+# _**IMPORTANT NOTE**_: You can NEVER, lock the bootloader in this state. EVER! If you attempt to, you will risk hard-bricking your phone! (Black screen, not turning on at all.) Although this is recoverable with EDL Mode, it is not recommended to lock the bootloader.
 
 # Current status :
 - [x] Boots into UI !
