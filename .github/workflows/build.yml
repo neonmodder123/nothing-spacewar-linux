@@ -1,0 +1,79 @@
+name: Build Droidian images
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write  # required for creating releases
+
+jobs:
+  devel-flashable:
+    runs-on: ubuntu-22.04
+    env:
+      ADAPTATION_TOOLS_BRANCH: main
+
+    steps:
+      - name: Set identifier
+        run: echo "DROIDIAN_IDENTIFIER=${{ matrix.config.product }}-${{ matrix.config.arch }}-${{ matrix.config.edition }}-${{ matrix.config.variant }}-${{ matrix.config.apilevel }}" >> $GITHUB_ENV
+        
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: 'true'
+          submodules: 'recursive'
+          
+      - name: Checkout submodules
+        run: git submodule update --init --recursive
+
+      - name: Setup build environment
+        run: |
+          sudo apt update
+          sudo apt install bc bison build-essential ca-certificates cpio curl fakeroot flex git img2simg jq kmod libssl-dev libtinfo5 lz4 python2 python3 sudo unzip wget xz-utils tar dpkg-dev gpg apt-utils -y --no-install-recommends
+          sudo ln -sf python2 /usr/bin/python
+          sudo wget https://raw.githubusercontent.com/LineageOS/android_system_core/lineage-17.1/mkbootimg/mkbootimg.py -O /usr/bin/mkbootimg
+
+      - name: Build device tarball
+        run: |
+          git clone https://gitlab.com/ubports/community-ports/halium-generic-adaptation-build-tools -b $ADAPTATION_TOOLS_BRANCH build
+          ./build.sh
+
+      - name: Clean up to get more space
+        run: |
+          rm -rf workdir/downloads/KERNEL_OBJ
+          rm -rf workdir/downloads/android_kernel_msm-5.4_nothing_sm7325
+          
+      - name: Build devel-flashable
+        run: |
+          DEVICE="$(source deviceinfo && echo $deviceinfo_codename)"
+          ./build/prepare-fake-ota.sh out/device_${DEVICE}.tar.xz ota
+          mkdir -p out
+          ./build/system-image-from-ota.sh ota/ubuntu_command out
+          mv out/rootfs.img out/droidian-rootfs.img
+
+      # --- Pack all images into one tar.xz ---
+      - name: Create archive for release
+        run: |
+          cd out
+          tar -cJf Droidian_v0.1.tar.xz boot.img vendor_boot.img ubuntu.img
+          cd ..
+
+      # --- Upload the archive as build artifact (for CI logs) ---
+      - name: Upload the archive to artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Droidian_v0.1-BETA
+          path: out/Droidian_v0.1.tar.xz
+          if-no-files-found: error
+
+      # --- Publish to GitHub Releases ---
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: "Droidian_BETA_v0.1"
+          name: "Droidian_BETA_v0.1"
+          files: out/Droidian_v0.1.tar.xz
+          body: |
+            VERY experimental build for Droidian.
+            DO NOT FLASH
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
