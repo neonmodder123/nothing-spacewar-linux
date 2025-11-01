@@ -1,4 +1,4 @@
-Attempt to get Ubports working on Nothing Phone 1 (Spacewar)
+Attempt to dualboot Droidian and Android on the Nothing Phone 1 (Spacewar)
 This tree is based on Fairphone 5 (fp5) on Ubports Gitlab reference port (halium 11)
 
 Current status :
