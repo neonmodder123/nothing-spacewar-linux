@@ -44,7 +44,7 @@ mkpart ubtouch_data
 print
 quit
 ```
-  It should show you a new partition with the number 11 called ubtouch_data.
+   It should show you a new partition with the number 11 called ubtouch_data.
 
 10. In the UBPorts recovery, click **Advanced** , then click **Reboot to recovery**.
 
