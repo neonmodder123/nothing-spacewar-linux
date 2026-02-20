@@ -125,6 +125,7 @@ You can also switch slots in android using the app [Boot Control](https://github
 - [x] Wireless externl display
 - [x] MTP & ADB in userspace (you must be on a Linux host to access MTP)
 - [x] Vibration (partially fixed)
+- [x] Dual Sim functionnaly
 
 - Unstable / Bugs :
 - [ ] Camera quality is far behind Android (also limited to 12MP)
@@ -141,7 +142,6 @@ Currently broken :
 Unsupported (won't/can't fix) :
 - [ ] UDFPS (Underdispay fingerprint is apparently not supported by UT)
 - [ ] Glyphs (not sure how to fix these)
-- [ ] Dual Sim functionnaly (only 1 SIM at a time)
 
 Credits and thanks :
 - Ubports Team,
