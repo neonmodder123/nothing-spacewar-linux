@@ -2,6 +2,8 @@ name: Build UT images
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * 5'
 
 permissions:
   contents: write  # required for creating releases
@@ -15,6 +17,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Get the current date
+        run: |
+          echo "RUN_DATE=$(date +%Y-%m-%d)" >> $GITHUB_ENV
+          echo "Date: ${{ env.RUN_DATE }}"
 
       - name: Setup build environment
         run: |
@@ -41,29 +48,30 @@ jobs:
           ./build/system-image-from-ota.sh ota/ubuntu_command out
           mv out/rootfs.img out/ubuntu.img
 
-      # --- Pack all images into one tar.xz ---
+      # Pack all images into one tar.xz
       - name: Create archive for release
         run: |
           cd out
-          tar -cJf UT-24.04_v3.tar.xz boot.img vendor_boot.img ubuntu.img
+          tar -cJf UT-24.04_v2.tar.xz boot.img vendor_boot.img ubuntu.img
           cd ..
 
-      # --- Upload the archive as build artifact (for CI logs) ---
+      # Upload the archive as build artifact
       - name: Upload the archive to artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: UT-24.02_v3
-          path: out/UT-24.02_v3.tar.xz
+          name: UT-24.04_v2
+          path: out/UT-24.04_v2.tar.xz
           if-no-files-found: error
 
-      # --- Publish to GitHub Releases ---
+      # Publish to GitHub Releases
       - name: Publish GitHub release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: "UT-24.04_v4"
-          name: "Ubuntu Touch 24.04 v4"
-          files: out/UT-24.02_v3.tar.xz
+          tag_name: "UT-24.04_v2"
+          name: "Ubuntu Touch 24.04 v2"
+          files: out/UT-24.04_v2.tar.xz
           body: |
-            Ubuntu Touch 24.04 version 4
+            Ubuntu Touch 24.04 version 2, Automated Run Number: ${{ github.run_number }}
+            Date Built: ${{ env.RUN_DATE }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
