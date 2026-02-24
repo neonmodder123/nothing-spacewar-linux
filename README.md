@@ -87,18 +87,19 @@ fastboot flash vendor_boot_b <drag vendor_boot.img>
 17. Now if you want to switch back to android, open the newly installed app and click Switch Slot, and reboot!
 You can also switch slots in android using the app [Boot Control](https://github.com/capntrips/BootControl/releases/tag/v1.0.0-alpha03), but you need to have root installed. If you do not want to root your device, you will manually have to reboot to fastboot mode/bootloader and use fastboot on your PC to switch to Ubuntu Touch.
 
-# _**IMPORTANT NOTE**_: You can NEVER, lock the bootloader in this state. EVER! If you attempt to, you will risk hard-bricking your phone! (Black screen, not turning on at all.) Although this is recoverable with EDL Mode, it is not recommended.
+# _**IMPORTANT NOTE**_: 
+## <span style="color:red">You can NEVER, lock the bootloader in this state. EVER! If you attempt to, you will risk hard-bricking your phone! (Black screen, not turning on at all.) Although this is recoverable with EDL Mode, it is not recommended.</span>
 
 # Current status :
 - [x] Boots into UI !
 - [x] Display (60Hz only for now)
 - [x] GPU acceleration
-- [x] Manual brightness
+- [x] Manual and auto-brightness
 - [x] Touchscreen
 - [x] RIL (SMS and calls)
 - [x] Mobile data (tested up to 4G, I don't have 5G)
 - [x] USB SSH
-- [x] Ubports recovery with adb
+- [x] Ubports recovery (with adb and fastbootd)
 - [x] Touchscreen in recovery mode
 - [x] Wi-Fi
 - [x] BT (BT audio too)
@@ -109,7 +110,7 @@ You can also switch slots in android using the app [Boot Control](https://github
 - [x] Loudspeaker
 - [x] Microphone
 - [x] Volume control with volume keys
-- [x] Double tap to wake
+- [x] Tap/double tap to wake
 - [x] Flashlight
 - [x] Hardware video playback
 - [x] AppArmor
@@ -121,16 +122,18 @@ You can also switch slots in android using the app [Boot Control](https://github
 - [x] Camera (front & back)
 - [x] Video recording
 - [x] Waydroid & Libertine containers
-- [x] Sensor (Accelerometer/Gyroscope)
+- [x] Sensors (Accelerometer/Gyroscope)
 - [x] Wireless externl display
 - [x] MTP & ADB in userspace (you must be on a Linux host to access MTP)
 - [x] Vibration (partially fixed)
 - [x] Dual Sim functionnaly
 
-- Unstable / Bugs :
+Unstable / Bugs :
 - [ ] Camera quality is far behind Android (also limited to 12MP)
 - [ ] Battery life isn't as on Android (but still good enough)
 - [ ] Auto-brightness works but it's not stable/accurate (working on a fix)
+- [ ] There's no vibration lomiri keyboard taps (it works everywhere else),
+- [ ] The keyboard clicks still produce sounds even when the phone is on Silent mode (disabled by default).
 
 Untested :
 - [ ] NFC (seems to work)
@@ -141,7 +144,8 @@ Currently broken :
 
 Unsupported (won't/can't fix) :
 - [ ] UDFPS (Underdispay fingerprint is apparently not supported by UT)
-- [ ] Glyphs (not sure how to fix these)
+- [ ] Glyphs interface aka the LED strips on the back of the phone (not sure how to fix these). They can still be controlled through sysfs
+- [ ] 90Hz and 120Hz display refresh rates
 
 Credits and thanks :
 - Ubports Team,
