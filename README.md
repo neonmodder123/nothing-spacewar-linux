@@ -88,7 +88,7 @@ fastboot flash vendor_boot_b <drag vendor_boot.img>
 You can also switch slots in android using the app [Boot Control](https://github.com/capntrips/BootControl/releases/tag/v1.0.0-alpha03), but you need to have root installed. If you do not want to root your device, you will manually have to reboot to fastboot mode/bootloader and use fastboot on your PC to switch to Ubuntu Touch.
 
 # _**IMPORTANT NOTE**_: 
-## <span style="color:red">You can NEVER, lock the bootloader in this state. EVER! If you attempt to, you will risk hard-bricking your phone! (Black screen, not turning on at all.) Although this is recoverable with EDL Mode, it is not recommended.</span>
+## <font color="red">You can NEVER, lock the bootloader in this state. EVER! If you attempt to, you will risk hard-bricking your phone! (Black screen, not turning on at all.) Although this is recoverable with EDL Mode, it is not recommended.</font>
 
 # Current status :
 - [x] Boots into UI !
