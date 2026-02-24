@@ -15,7 +15,7 @@
     <!-- Flag indicating whether the we should enable the automatic brightness in Settings.
          Software implementation will be used if config_hardware_auto_brightness_available is not set -->
     <bool name="config_automatic_brightness_available">true</bool>
-    
+
     <!-- Array of light sensor lux values to define our levels for auto backlight brightness support.
          The N entries of this array define N + 1 control points as follows:
          (1-based arrays)
@@ -33,9 +33,10 @@
          backlight values for lux levels between these control points.
          Must be overridden in platform specific overlays -->
     <integer-array name="config_autoBrightnessLevels">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
         <item>4</item>
-        <item>6</item>
-        <item>7</item>
         <item>8</item>
         <item>12</item>
         <item>20</item>
@@ -50,7 +51,6 @@
         <item>1808</item>
         <item>2981</item>
         <item>5000</item>
-        <item>8000</item>
         <item>10000</item>
     </integer-array>
 
@@ -86,25 +86,25 @@
          The brightness values must be between 0 and 255 and be non-decreasing.
          This must be overridden in platform specific overlays -->
     <integer-array name="config_autoBrightnessLcdBacklightValues">
-    <item>10</item>
-    <item>30</item>
-    <item>55</item>
-    <item>80</item>
-    <item>105</item>
-    <item>140</item>
-    <item>180</item>
-    <item>250</item>
-    <item>350</item>
+    <item>410</item>
+    <item>430</item>
+    <item>450</item>
+    <item>470</item>
     <item>500</item>
+    <item>560</item>
+    <item>620</item>
     <item>700</item>
-    <item>1000</item>
-    <item>1300</item>
-    <item>1650</item>
-    <item>2050</item>
-    <item>2550</item>
-    <item>3100</item>
+    <item>800</item>
+    <item>950</item>
+    <item>1150</item>
+    <item>1350</item>
+    <item>1600</item>
+    <item>1900</item>
+    <item>2250</item>
+    <item>2700</item>
+    <item>3200</item>
     <item>3600</item>
-    <item>4095</item>
+    <item>3850</item>
     <item>4095</item>
     </integer-array>
 
