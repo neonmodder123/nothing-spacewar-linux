@@ -64,29 +64,30 @@ name 11 "ubtouch_data"
 print
 quit
 ```
-10. In the UBPorts recovery, click **Advanced** , then click **Reboot to recovery**.
-11. Use the mkfs.ext4 binary to format your new partition:
+10. Use the mkfs.ext4 binary to format your new partition:
 ```
 ./mkfs.ext4 /dev/block/sda11
 ```
-12. In the UBPorts recovery, click **Advanced** , then click **Reboot to recovery**. Then, enter the adb shell to mount your new partition to /data and then exit:
+11. In the UBPorts recovery, click **Advanced** , then click **Reboot to bootloader**.
+12. Flash the modified boot and vendor_boot images in the extracted folder containing the ubuntu.img rootfs using these commands:
+```
+fastboot set_active b
+fastboot flash boot_b <drag boot.img>
+fastboot flash vendor_boot_b <drag vendor_boot.img>
+fastboot reboot recovery
+```
+13. Enter the adb shell to mount your new partition to /data and then exit:
 ```
 adb shell
 mount /data
 exit
 ```
-13. Push the ubuntu.img rootfs to /data using adb then reboot to bootloader:
+14. Push the ubuntu.img rootfs to /data using adb then reboot to bootloader:
 ```
 adb push <drag ubuntu.img> /data/
 adb reboot bootloader
 ```
-14. Flash the modified boot and vendor_boot images in the extracted folder containing the ubuntu.img rootfs using these commands:
-```
-fastboot set_active b
-fastboot flash boot_b <drag boot.img>
-fastboot flash vendor_boot_b <drag vendor_boot.img>
-```
-14. Reboot!
+15. Reboot!
 
   You have now successfully dualbooted Android and Ubuntu Touch! Wait 2-4 minutes for the first boot. You should see the Ubuntu Touch bootanimation and then see the setup. Proceed to the next step.
 
