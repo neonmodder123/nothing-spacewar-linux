@@ -53,9 +53,17 @@ ext4
 9. Now confirm that you created the partition successfully:
 ```
 print
-quit
 ```
    It should show you a new partition with the number 11 called ubtouch_data.
+   Note: If you see the partition but unnamed, run this command:
+```
+name 11 "ubtouch_data"
+```
+   Then confirm it is named and exit:
+```
+print
+quit
+```
 10. In the UBPorts recovery, click **Advanced** , then click **Reboot to recovery**.
 11. Use the mkfs.ext4 binary to format your new partition:
 ```
