@@ -97,7 +97,7 @@ You can also switch slots in android using the app [Boot Control](https://github
 - [x] Manual and auto-brightness
 - [x] Touchscreen
 - [x] RIL (SMS and calls)
-- [x] Mobile data (tested up to 4G, I don't have 5G)
+- [x] Mobile data (5G works too)
 - [x] USB SSH
 - [x] Ubports recovery (with adb and fastbootd)
 - [x] Touchscreen in recovery mode
@@ -144,8 +144,10 @@ Currently broken :
 
 Unsupported (won't/can't fix) :
 - [ ] UDFPS (Underdispay fingerprint is apparently not supported by UT)
-- [ ] Glyphs interface aka the LED strips on the back of the phone (not sure how to fix these). They can still be controlled through sysfs
 - [ ] 90Hz and 120Hz display refresh rates
+
+To Do :
+- [ ] Glyphs interface aka the LED strips on the back of the phone. They can still be controlled through sysfs, so maybe add a privileged service to be triggered when you recieve notifications/calls/etc.. ?
 
 Credits and thanks :
 - Ubports Team,
